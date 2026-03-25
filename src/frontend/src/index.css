@@ -1,0 +1,235 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "BricolageGrotesque";
+  src: url("/assets/fonts/BricolageGrotesque.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 200 800;
+}
+
+@font-face {
+  font-family: "PlusJakartaSans";
+  src: url("/assets/fonts/PlusJakartaSans.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 300 700;
+}
+
+@layer base {
+  :root {
+    --radius: 1rem;
+    --background: 0.12 0.005 250;
+    --foreground: 0.97 0.005 250;
+    --card: 0.16 0.008 250;
+    --card-foreground: 0.95 0.005 250;
+    --popover: 0.18 0.008 250;
+    --popover-foreground: 0.95 0.005 250;
+    --primary: 0.68 0.16 238;
+    --primary-foreground: 0.12 0.005 250;
+    --secondary: 0.22 0.01 250;
+    --secondary-foreground: 0.85 0.005 250;
+    --muted: 0.2 0.01 250;
+    --muted-foreground: 0.6 0.01 250;
+    --accent: 0.5 0.27 292;
+    --accent-foreground: 0.97 0.005 250;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border: 1 0 0 / 12%;
+    --input: 1 0 0 / 12%;
+    --ring: 0.68 0.16 238;
+    --chart-1: 0.79 0.15 213;
+    --chart-2: 0.54 0.22 262;
+    --chart-3: 0.5 0.27 292;
+    --chart-4: 0.71 0.18 45;
+    --chart-5: 0.83 0.15 84;
+    --sidebar: 0.14 0.008 250;
+    --sidebar-foreground: 0.97 0.005 250;
+    --sidebar-primary: 0.68 0.16 238;
+    --sidebar-primary-foreground: 0.12 0.005 250;
+    --sidebar-accent: 0.2 0.01 250;
+    --sidebar-accent-foreground: 0.85 0.005 250;
+    --sidebar-border: 1 0 0 / 12%;
+    --sidebar-ring: 0.68 0.16 238;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "PlusJakartaSans", system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .glass-dark {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #19c6ff, #7b3cff, #ff7a3d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glow-text {
+    text-shadow: 0 0 40px rgba(79, 167, 255, 0.8), 0 0 80px
+      rgba(123, 60, 255, 0.4);
+  }
+
+  .glow-gold {
+    text-shadow: 0 0 40px rgba(255, 194, 71, 0.8), 0 0 80px
+      rgba(212, 75, 255, 0.5);
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.5s ease-out forwards;
+  }
+
+  .animate-gradient {
+    background-size: 300% 300%;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  .animate-completion-gradient {
+    background-size: 400% 400%;
+    animation: completion-gradient 6s ease infinite;
+  }
+
+  .animate-dhanyavaadam {
+    animation: dhanyavaadam-glow 2s ease-in-out infinite;
+  }
+
+  .animate-draw-path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw-path 2s ease forwards;
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(79, 167, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(79, 167, 255, 0.7), 0 0 80px
+      rgba(123, 60, 255, 0.3);
+  }
+}
+
+@keyframes draw-path {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes completion-gradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes dhanyavaadam-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 40px rgba(255, 194, 71, 0.9), 0 0 80px
+      rgba(212, 75, 255, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 80px rgba(255, 194, 71, 1), 0 0 160px
+      rgba(212, 75, 255, 0.8), 0 0 200px rgba(25, 198, 255, 0.5);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
