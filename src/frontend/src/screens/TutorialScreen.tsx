@@ -1953,12 +1953,13 @@ export function TutorialScreen({
 
   return (
     <div className="min-h-screen pt-20 pb-10 px-4 bg-[#0E1117]">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+      <div className="max-w-5xl mx-auto">
+        {/* Top bar */}
+        <div className="flex items-center justify-between mb-4">
           <button
             type="button"
             onClick={onBack}
-            className="flex items-center gap-1 text-white/40 hover:text-white/80 transition-colors"
+            className="flex items-center gap-1.5 text-white/40 hover:text-white/80 transition-colors text-sm font-medium"
             data-ocid="tutorial.back.button"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -1972,73 +1973,167 @@ export function TutorialScreen({
               {modeLabel}
             </span>
           </div>
-          <div className="text-white/40 text-sm">
-            {currentStep + 1}/{steps.length}
+          {/* Step badge */}
+          <div className="flex flex-col items-end gap-0.5">
+            <span className="text-xs text-white/40 font-medium uppercase tracking-widest">
+              Step
+            </span>
+            <span className="text-white font-display font-extrabold text-2xl leading-none">
+              {currentStep + 1}
+              <span className="text-white/30 font-medium text-base">
+                /{steps.length}
+              </span>
+            </span>
           </div>
         </div>
 
         <Progress
           value={progress}
-          className="h-1.5 bg-white/10 mb-6"
+          className="h-2 bg-white/10 mb-6 rounded-full"
           data-ocid="tutorial.progress"
         />
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          <div
-            className="bg-white rounded-2xl overflow-hidden shadow-2xl relative"
-            style={{ minHeight: 340 }}
-          >
-            {config.uploadedImage && currentStep === 0 && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <img
-                  src={config.uploadedImage}
-                  alt="Reference"
-                  className="w-full h-full object-contain opacity-20"
+        <div className="grid lg:grid-cols-[1fr_380px] gap-6">
+          {/* Canvas column */}
+          <div className="flex flex-col gap-4">
+            {/* Sketchpad */}
+            <div
+              className="relative rounded-2xl overflow-hidden"
+              style={{
+                boxShadow:
+                  "0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.1)",
+              }}
+            >
+              {/* Sketchpad border strip */}
+              <div className="bg-gradient-to-r from-[#4FA7FF]/80 via-[#7B3CFF]/80 to-[#D44BFF]/80 h-2 w-full" />
+              {/* White canvas area */}
+              <div className="bg-white relative" style={{ minHeight: 360 }}>
+                {/* Subtle grid lines mimicking sketchpad */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(173,216,230,0.35) 39px, rgba(173,216,230,0.35) 40px)",
+                    backgroundSize: "100% 40px",
+                  }}
                 />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <p className="text-gray-400 text-sm font-medium">
-                    Reference image
+                {/* Red margin line */}
+                <div className="absolute top-0 bottom-0 left-12 w-px bg-red-300/40 pointer-events-none" />
+
+                {config.uploadedImage && currentStep === 0 && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <img
+                      src={config.uploadedImage}
+                      alt="Reference"
+                      className="w-full h-full object-contain opacity-15"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <p className="text-gray-400 text-sm font-medium">
+                        Reference image
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={animKey}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="w-full h-full"
+                  >
+                    <StepSVG
+                      step={currentStep + 1}
+                      mode={config.mode}
+                      subject={config.subject}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+              {/* Bottom strip with step info */}
+              <div className="bg-[#1a1f2e] px-4 py-2.5 flex items-center justify-between">
+                <span className="text-white/50 text-xs font-mono tracking-wider">
+                  STEP {currentStep + 1} / {steps.length}
+                </span>
+                <span className="text-white/70 text-xs font-semibold">
+                  {steps[currentStep]?.title}
+                </span>
+              </div>
+            </div>
+
+            {/* Prev / Next buttons */}
+            <div className="flex gap-3">
+              <Button
+                onClick={goPrev}
+                disabled={currentStep === 0}
+                variant="outline"
+                size="lg"
+                className="flex-1 border-white/15 text-white hover:bg-white/10 disabled:opacity-30 gap-2 text-base font-semibold py-6"
+                data-ocid="tutorial.prev.button"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                Previous
+              </Button>
+              <Button
+                onClick={goNext}
+                size="lg"
+                className="flex-1 bg-gradient-to-r from-[#4FA7FF] to-[#7B3CFF] hover:opacity-90 text-white font-bold gap-2 text-base py-6 shadow-[0_4px_24px_rgba(79,167,255,0.4)]"
+                data-ocid="tutorial.next.button"
+              >
+                {currentStep === steps.length - 1 ? (
+                  <>
+                    Complete <CheckCircle className="w-5 h-5" />
+                  </>
+                ) : (
+                  <>
+                    Next Step <ChevronRight className="w-5 h-5" />
+                  </>
+                )}
+              </Button>
+            </div>
+            <p className="text-white/20 text-xs text-center">
+              ← → Arrow keys to navigate
+            </p>
+          </div>
+
+          {/* Sidebar column */}
+          <div className="flex flex-col gap-4">
+            {/* Reference image panel */}
+            {(config.imageUrl || config.uploadedImage) && (
+              <div className="glass rounded-2xl overflow-hidden border border-white/10">
+                <div className="px-4 py-2.5 bg-white/5 border-b border-white/10 flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#4FA7FF]" />
+                  <span className="text-white/70 text-xs font-semibold uppercase tracking-widest">
+                    Reference
+                  </span>
+                </div>
+                <div
+                  className="p-3 flex items-center justify-center bg-white/5"
+                  style={{ minHeight: 140 }}
+                >
+                  <img
+                    src={config.imageUrl || config.uploadedImage}
+                    alt={`Reference: ${config.subject}`}
+                    className="max-w-full rounded-lg object-contain shadow-lg"
+                    style={{ maxHeight: 160 }}
+                  />
+                </div>
+                <div className="px-4 py-2 bg-white/3">
+                  <p className="text-white/40 text-xs text-center">
+                    {config.subject}
                   </p>
                 </div>
               </div>
             )}
-            {config.imageUrl && (
-              <div className="absolute top-2 right-2 z-10 flex flex-col items-center gap-0.5">
-                <img
-                  src={config.imageUrl}
-                  alt="Reference"
-                  className="w-20 h-20 rounded-lg object-contain bg-gray-100 border border-gray-200 shadow-md"
-                  style={{ opacity: 0.55 }}
-                />
-                <span className="text-[9px] text-gray-400 font-medium tracking-wide uppercase">
-                  Reference
-                </span>
-              </div>
-            )}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={animKey}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="w-full h-full"
-              >
-                <StepSVG
-                  step={currentStep + 1}
-                  mode={config.mode}
-                  subject={config.subject}
-                />
-              </motion.div>
-            </AnimatePresence>
-          </div>
 
-          <div className="flex flex-col gap-4">
+            {/* Steps list */}
             <div className="flex-1 space-y-2">
               {steps.map((s, i) => (
                 <div
                   key={s.title}
-                  className={`rounded-xl p-3 transition-all ${
+                  className={`rounded-xl p-4 transition-all ${
                     i === currentStep
                       ? "glass border border-[#4FA7FF]/30 bg-[#4FA7FF]/5"
                       : i < currentStep
@@ -2049,7 +2144,7 @@ export function TutorialScreen({
                 >
                   <div className="flex items-start gap-3">
                     <div
-                      className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                      className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
                         i < currentStep
                           ? "bg-green-500 text-white"
                           : i === currentStep
@@ -2058,12 +2153,12 @@ export function TutorialScreen({
                       }`}
                     >
                       {i < currentStep ? (
-                        <CheckCircle className="w-3.5 h-3.5" />
+                        <CheckCircle className="w-4 h-4" />
                       ) : (
                         i + 1
                       )}
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <p
                         className={`font-semibold text-sm ${i === currentStep ? "text-white" : "text-white/50"}`}
                       >
@@ -2073,7 +2168,7 @@ export function TutorialScreen({
                         <motion.p
                           initial={{ opacity: 0, y: 5 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="text-white/60 text-xs mt-1 leading-relaxed"
+                          className="text-white/75 text-sm mt-2 leading-relaxed"
                         >
                           {s.desc}
                         </motion.p>
@@ -2083,37 +2178,6 @@ export function TutorialScreen({
                 </div>
               ))}
             </div>
-
-            <div className="flex gap-3">
-              <Button
-                onClick={goPrev}
-                disabled={currentStep === 0}
-                variant="outline"
-                className="flex-1 border-white/10 text-white hover:bg-white/10 disabled:opacity-30"
-                data-ocid="tutorial.prev.button"
-              >
-                <ChevronLeft className="w-4 h-4 mr-1" />
-                Prev
-              </Button>
-              <Button
-                onClick={goNext}
-                className="flex-1 bg-gradient-to-r from-[#4FA7FF] to-[#7B3CFF] hover:opacity-90 text-white font-semibold"
-                data-ocid="tutorial.next.button"
-              >
-                {currentStep === steps.length - 1 ? (
-                  <>
-                    Complete <CheckCircle className="w-4 h-4 ml-1" />
-                  </>
-                ) : (
-                  <>
-                    Next Step <ChevronRight className="w-4 h-4 ml-1" />
-                  </>
-                )}
-              </Button>
-            </div>
-            <p className="text-white/20 text-xs text-center">
-              Use arrow keys to navigate steps
-            </p>
           </div>
         </div>
       </div>

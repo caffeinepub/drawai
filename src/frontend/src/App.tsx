@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
+import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useState } from "react";
 import { FeedbackModal } from "./components/FeedbackModal";
 import { Header } from "./components/Header";
@@ -73,41 +74,91 @@ export default function App() {
         currentScreen={screen}
       />
 
-      {screen === "home" && (
-        <HomeScreen
-          heroGradient={heroGradient}
-          onNavigate={navigateTo}
-          onFeedback={() => setFeedbackOpen(true)}
-        />
-      )}
-      {screen === "name-draw" && (
-        <NameDrawScreen
-          onNavigate={navigateTo}
-          onBack={() => navigateTo("home")}
-        />
-      )}
-      {screen === "insert-draw" && (
-        <InsertDrawScreen
-          onNavigate={navigateTo}
-          onBack={() => navigateTo("home")}
-        />
-      )}
-      {screen === "tutorial" && tutorialConfig && (
-        <TutorialScreen
-          config={tutorialConfig}
-          onComplete={() => navigateTo("completion")}
-          onBack={() => navigateTo("home")}
-        />
-      )}
-      {screen === "completion" && (
-        <CompletionScreen
-          gradient={completionGradient}
-          onDrawAgain={() => navigateTo("home")}
-        />
-      )}
-      {screen === "generate-video" && (
-        <GenerateVideoScreen onBack={() => navigateTo("home")} />
-      )}
+      <AnimatePresence mode="wait">
+        {screen === "home" && (
+          <motion.div
+            key="home"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <HomeScreen
+              heroGradient={heroGradient}
+              onNavigate={navigateTo}
+              onFeedback={() => setFeedbackOpen(true)}
+            />
+          </motion.div>
+        )}
+        {screen === "name-draw" && (
+          <motion.div
+            key="name-draw"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.3 }}
+          >
+            <NameDrawScreen
+              onNavigate={navigateTo}
+              onBack={() => navigateTo("home")}
+            />
+          </motion.div>
+        )}
+        {screen === "insert-draw" && (
+          <motion.div
+            key="insert-draw"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.3 }}
+          >
+            <InsertDrawScreen
+              onNavigate={navigateTo}
+              onBack={() => navigateTo("home")}
+            />
+          </motion.div>
+        )}
+        {screen === "tutorial" && tutorialConfig && (
+          <motion.div
+            key="tutorial"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.3 }}
+          >
+            <TutorialScreen
+              config={tutorialConfig}
+              onComplete={() => navigateTo("completion")}
+              onBack={() => navigateTo("home")}
+            />
+          </motion.div>
+        )}
+        {screen === "completion" && (
+          <motion.div
+            key="completion"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <CompletionScreen
+              gradient={completionGradient}
+              onDrawAgain={() => navigateTo("home")}
+            />
+          </motion.div>
+        )}
+        {screen === "generate-video" && (
+          <motion.div
+            key="generate-video"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.3 }}
+          >
+            <GenerateVideoScreen onBack={() => navigateTo("home")} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <FeedbackModal
         open={feedbackOpen}
